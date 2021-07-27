@@ -1,0 +1,13 @@
+<class_libraries>
+	<library path="plugin-examples">
+	  <class name="ros2_examples/PluginExampleA" type="ros2_examples::PluginExampleA" base_class_type="ros2_examples::PluginInterfaceExample">
+	    <description></description>
+	  </class>
+	</library>
+
+	<library path="plugin-examples">
+	  <class name="ros2_examples/PluginExampleB" type="ros2_examples::PluginExampleB" base_class_type="ros2_examples::PluginInterfaceExample">
+	    <description></description>
+	  </class>
+	</library>
+</class_libraries>
