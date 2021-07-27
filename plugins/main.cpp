@@ -91,7 +91,7 @@ private:
 
     rclcpp::TimerBase::SharedPtr m_timer;
 
-    pluginlib::ClassLoader<ros2_examples::PluginInterfaceExample> m_plugin_loader {"ros2_examples", "ros2_examples::PluginInterfaceExample"};
+    pluginlib::ClassLoader<ros2_examples::PluginInterfaceExample> m_plugin_loader {"plugins", "ros2_examples::PluginInterfaceExample"};
     std::vector<pluginlib::UniquePtr<ros2_examples::PluginInterfaceExample>> m_plugins;
     std::vector<std::string> m_plugin_names;
 };

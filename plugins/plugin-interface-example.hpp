@@ -19,21 +19,20 @@ namespace ros2_examples
 class PluginInterfaceExample
 {
 public:
-    PluginInterfaceExample();
+    virtual ~PluginInterfaceExample() {}
 
-    virtual void configure(const rclcpp_lifecycle::LifecycleNode::WeakPtr & node);
+    virtual void configure(const rclcpp_lifecycle::LifecycleNode::WeakPtr & node) = 0;
 
-    virtual void activate();
+    virtual void activate() = 0;
 
-    virtual void deactivate();
+    virtual void deactivate() = 0;
 
-    virtual void cleanup();
+    virtual void cleanup() = 0;
 
-    virtual void publish();
+    virtual void publish() = 0;
 
 protected:
     std::string m_plugin_name;
-    rclcpp_lifecycle::LifecycleNode::WeakPtr m_node;
 };
 
 }
