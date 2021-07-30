@@ -21,8 +21,6 @@ void PluginExampleA::configure(const rclcpp_lifecycle::LifecycleNode::WeakPtr & 
     if (node) {
         m_pub = node->create_publisher<example_interfaces::msg::String>("topic_A", 10);
     }
-
-    RCLCPP_INFO(rclcpp::get_logger(m_plugin_name.c_str()), "%s is configured", m_plugin_name.c_str());
 }
 
 void PluginExampleA::activate()
@@ -30,8 +28,6 @@ void PluginExampleA::activate()
     if (m_pub) {
         m_pub->on_activate();
     }
-
-    RCLCPP_INFO(rclcpp::get_logger(m_plugin_name.c_str()), "%s is activated", m_plugin_name.c_str());
 }
 
 void PluginExampleA::deactivate()
@@ -39,15 +35,11 @@ void PluginExampleA::deactivate()
     if (m_pub) {
         m_pub->on_deactivate();
     }
-
-    RCLCPP_INFO(rclcpp::get_logger(m_plugin_name.c_str()), "%s is deactivated", m_plugin_name.c_str());
 }
 
 void PluginExampleA::cleanup()
 {
     m_pub.reset();
-
-    RCLCPP_INFO(rclcpp::get_logger(m_plugin_name.c_str()), "%s is unconfigured", m_plugin_name.c_str());
 }
 
 void PluginExampleA::publish()

@@ -16,11 +16,14 @@
 namespace ros2_examples
 {
 
+// A plugin base class that provides virtual functions to align with lifecycle transitions
 class PluginInterfaceExample
 {
 public:
     virtual ~PluginInterfaceExample() {}
 
+    // Plugin base class constructors cannot have parameters, so a node pointer is provided
+    // during the configure transition
     virtual void configure(const rclcpp_lifecycle::LifecycleNode::WeakPtr & node) = 0;
 
     virtual void activate() = 0;
@@ -30,6 +33,8 @@ public:
     virtual void cleanup() = 0;
 
     virtual void publish() = 0;
+
+    std::string get_name() { return m_plugin_name; }
 
 protected:
     std::string m_plugin_name;
