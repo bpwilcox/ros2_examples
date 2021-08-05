@@ -1,0 +1,13 @@
+<class_libraries>
+	<library path="plugin-lifecyle">
+	  <class name="ros2_examples/PluginLifecycleA" type="ros2_examples::PluginLifecycleA" base_class_type="ros2_examples::PluginInterfaceLifecycle">
+	    <description></description>
+	  </class>
+	</library>
+
+	<library path="plugin-lifecyle">
+	  <class name="ros2_examples/PluginLifecycleB" type="ros2_examples::PluginLifecycleB" base_class_type="ros2_examples::PluginInterfaceLifecycle">
+	    <description></description>
+	  </class>
+	</library>
+</class_libraries>
