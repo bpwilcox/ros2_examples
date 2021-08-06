@@ -7,6 +7,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(example_interfaces REQUIRED)
 find_package(pluginlib REQUIRED)
+find_package(performance_test REQUIRED)
 
 set(executable_name plugin-lifecycle-example)
 
@@ -37,7 +38,10 @@ add_executable(${executable_name}
 
 ament_target_dependencies(${executable_name}
   ${dependencies}
+  performance_test
 )
+
+target_link_libraries(${executable_name} plugin-examples)
 
 install(TARGETS plugin-examples
   ARCHIVE DESTINATION lib

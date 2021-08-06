@@ -9,6 +9,7 @@
 #include <string>
 
 #include <lifecycle_msgs/msg/state.hpp>
+#include <lifecycle_msgs/msg/transition.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <pluginlib/class_loader.hpp>
@@ -17,9 +18,10 @@
 
 using namespace std::chrono_literals;
 using lifecycle_msgs::msg::State;
+using lifecycle_msgs::msg::Transition;
 
 // This lifecycle node example demonstrates how to load and use plugins using pluginlib
-class LifecyclePluginsNode : public rclcpp_lifecycle::LifecycleNode 
+class LifecyclePluginsNode : public rclcpp_lifecycle::LifecycleNode
 {
 public:
     LifecyclePluginsNode(std::vector<std::string> default_plugin_names)
@@ -123,17 +125,44 @@ private:
 
     rclcpp::TimerBase::SharedPtr m_timer;
 
-    pluginlib::ClassLoader<ros2_examples::PluginInterfaceLifecycle> m_plugin_loader {"plugins", "ros2_examples::PluginInterfaceLifecycle"};
+    pluginlib::ClassLoader<ros2_examples::PluginInterfaceLifecycle> m_plugin_loader {"plugins_performance", "ros2_examples::PluginInterfaceLifecycle"};
     std::vector<pluginlib::UniquePtr<ros2_examples::PluginInterfaceLifecycle>> m_plugins;
     std::vector<std::string> m_plugin_names;
 };
+
+void spin_test_node(rclcpp_lifecycle::LifecycleNode::SharedPtr node, int transition_duration = 5)
+{
+    static std::vector <uint8_t> transitions {
+      Transition::TRANSITION_CONFIGURE,
+      Transition::TRANSITION_ACTIVATE,
+      Transition::TRANSITION_DEACTIVATE,
+      Transition::TRANSITION_CLEANUP,
+      Transition::TRANSITION_UNCONFIGURED_SHUTDOWN,
+    };
+
+    auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+
+    executor->add_node(node->get_node_base_interface());
+    std::thread thread([=](){
+        executor->spin();
+    });
+
+    thread.detach();
+
+    for (int i = 0; i < transitions.size(); i++) {
+      std::this_thread::sleep_for(std::chrono::seconds(transition_duration));
+      node->trigger_transition(transitions[i]);
+    }
+
+    executor->cancel();
+}
 
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
   std::vector<std::string> plugins {"ros2_examples/PluginLifecycleA", "ros2_examples/PluginLifecycleB"};
   auto node = std::make_shared<LifecyclePluginsNode>(plugins);
-  rclcpp::spin(node->get_node_base_interface());
+  spin_test_node(node);
   rclcpp::shutdown();
   return 0;
 }
