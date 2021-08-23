@@ -18,28 +18,28 @@ public:
     LifecycleCallbackTest()
     : rclcpp_lifecycle::LifecycleNode("lifecycle_callback_test_node")
     {
-        auto cb = [](const std::vector<rclcpp::Parameter> & parameters)
+        auto cb = [this](const std::vector<rclcpp::Parameter> & parameters)
         {
             rcl_interfaces::msg::SetParametersResult result;
             result.successful = true;
             for (const auto & parameter : parameters) {
                 if (parameter.get_name() == "force_failure_id") {
-                    force_failure_id = paremeter.get_value<uint8_t>();
+                    force_failure_id_ = parameter.get_value<uint8_t>();
                 }
             }
 
             return result;
         };
 
-        add_on_set_parameters_callback(cb)
+        param_handle_ = add_on_set_parameters_callback(cb);
 
-        declare_parameter("force_failure_id", force_failure_id);
+        declare_parameter("force_failure_id", force_failure_id_);
     }
 
 private:
     CallbackReturn on_configure(const rclcpp_lifecycle::State & state) override
     {
-        if (force_failure_id == Transition::TRANSITION_CONFIGURE) {
+        if (force_failure_id_ == Transition::TRANSITION_CONFIGURE) {
             return CallbackReturn::FAILURE;
         }
 
@@ -48,7 +48,7 @@ private:
 
     CallbackReturn on_activate(const rclcpp_lifecycle::State & state) override
     {
-        if (force_failure_id == Transition::TRANSITION_ACTIVATE) {
+        if (force_failure_id_ == Transition::TRANSITION_ACTIVATE) {
             return CallbackReturn::FAILURE;
         }
 
@@ -57,7 +57,7 @@ private:
 
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State & state) override
     {
-        if (force_failure_id == Transition::TRANSITION_DEACTIVATE) {
+        if (force_failure_id_ == Transition::TRANSITION_DEACTIVATE) {
             return CallbackReturn::FAILURE;
         }
 
@@ -66,7 +66,7 @@ private:
 
     CallbackReturn on_cleanup(const rclcpp_lifecycle::State & state) override
     {
-        if (force_failure_id == Transition::TRANSITION_CLEANUP) {
+        if (force_failure_id_ == Transition::TRANSITION_CLEANUP) {
             return CallbackReturn::FAILURE;
         }
 
@@ -75,7 +75,7 @@ private:
 
     CallbackReturn on_error(const rclcpp_lifecycle::State & state) override
     {
-        if (force_failure_id == Transition::TRANSITION_ON_ERROR_FAILURE) {
+        if (force_failure_id_ == Transition::TRANSITION_ON_ERROR_FAILURE) {
             return CallbackReturn::FAILURE;
         }
 
@@ -84,21 +84,22 @@ private:
 
     CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state) override
     {
-        if (force_failure_id == Transition::TRANSITION_UNCONFIGURED_SHUTDOWN) {
+        if (force_failure_id_ == Transition::TRANSITION_UNCONFIGURED_SHUTDOWN) {
             return CallbackReturn::FAILURE;
         }
 
         return CallbackReturn::SUCCESS;
     }
 
-    uint8_t force_failure_id = 0;
+    uint8_t force_failure_id_ = 0;
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_handle_;
 };
 
 int main(int argc, char** argv)
 {
     rclcpp::init(argc, argv);
     auto node = std::make_shared<LifecycleCallbackTest>();
-    rclcpp::spin(node);
+    rclcpp::spin(node->get_node_base_interface());
     rclcpp::shutdown();
     return 0;
 }
