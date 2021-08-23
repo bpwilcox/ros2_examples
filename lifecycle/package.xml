@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>plugins_performance</name>
+  <name>lifecycle_examples</name>
   <version>1.0.0</version>
   <description>TODO</description>
   <maintainer email="bwilcox@irobot.com">Brian Wilcox</maintainer>
@@ -11,11 +11,9 @@
 
   <build_depend>rclcpp</build_depend>
   <build_depend>rclcpp_lifecycle</build_depend>
-  <build_depend>pluginlib</build_depend>
 
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>rclcpp_lifecycle</exec_depend>
-  <exec_depend>pluginlib</exec_depend>
 
   <test_depend>ament_lint_common</test_depend>
   <test_depend>ament_lint_auto</test_depend>
@@ -23,6 +21,5 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <ros2_examples plugin="${prefix}/plugins_lifecycle.xml" />
   </export>
 </package>
